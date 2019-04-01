@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html  lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+    <title>Title</title>
+</head>
+<link rel="stylesheet"  th:href="@{/iconfont/iconfont.css}"  type="text/css" >
+<link rel="stylesheet"  href="login.css"  type="text/css" >
+<script th:src="@{/iconfont/iconfont.js}"></script>
+<script src="jquery.js"></script>
+<body>
+    <div class="logGet">
+        <!-- 头部提示信息 -->
+        <div class="logDtip">
+            <span class="iconfont icon-fork" id="close"></span>
+            <p class="p1">设备注册</p>
+            <span class="iconfont icon-more"></span>
+        </div>
+        <div class="line"></div>
+        <!-- 输入框 -->
+        <div class="lgD">
+            <span class="iconfont icon-yonghu"></span>
+            <input type="text" id="username" placeholder="请输入用户名"  value=""/>
+        </div>
+        <div class="lgD">
+            <span class="iconfont icon-mima"></span>
+            <img src="" width="20" height="20" alt=""/>
+            <input type="password" id="password" placeholder="请输入密码" value=""/>
+        </div>
+        <div class="logC">
+            <a href="javascript:;" target="_self">
+                <button id="btn">登 录</button>
+            </a>
+        </div>
+
+        <div>
+
+        </div>
+    </div>
+<script type="text/javascript">
+        function getRootPath_web() {
+            //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+            var curWwwPath = window.document.location.href;
+            //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+            var pathName = window.document.location.pathname;
+            var pos = curWwwPath.indexOf(pathName);
+            //获取主机地址，如： http://localhost:8083
+            var localhostPaht = curWwwPath.substring(0, pos);
+            //获取带"/"的项目名，如：/uimcardprj
+            var projectName = pathName.substring(0, pathName.substr(1).indexOf('/') + 1);
+            return (localhostPaht + projectName);
+        }
+        $('#btn').click(function () {
+            function getQueryString(name) {
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                var r = window.location.search.substr(1).match(reg);
+                if (r != null) return unescape(r[2]);
+                return null;
+            }
+            var mac=getQueryString("mac");
+            var timestamp=getQueryString("timestamp");
+            var sign=getQueryString("sign")
+            var username = $('#username').val();
+            var password = $('#password').val();
+            var user = {
+                username: username,
+                password: password
+            };
+            if (username == "" || password == "") {
+                confirm('用户名和密码不能为空！')
+            }else {
+                $.ajax({
+                    type: 'post',
+                    url: getRootPath_web()+"/tms/loginConfirm",
+                    date: {"user":user,"mac":mac,"timestamp":timestamp,"sign":sign},
+                    dataType:'json',
+                    success:function (data) {
+                        if (data.status="000000000"){
+                            window.location.href = getRootPath_web()+"/tms/toBind"+"?"+"mac="+mac+"&"+"timestamp="+timestamp+"&"+"sign="+sign;
+                    }else{
+                            window.location.href="";
+                        }
+                    }
+                })
+            }
+        });
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
